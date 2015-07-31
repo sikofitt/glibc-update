@@ -145,8 +145,9 @@ function build_glibc() {
   echo -n "  ${cgreen}*${cwhite} Unpacking glibc ... "
   tar -jxvf glibc-2.21.tar.bz2 >/dev/null 2>&1 || exit 1
   echo "done!${cnormal}"
-  cd $CURRENT_DIR/glibc-2.21
-  ./configure --prefix=/usr
+  mkdir $CURRENT_DIR/glibc-2.21/build
+  cd $CURRENT_DIR/glibc-2.21/build
+  ../configure --prefix=/usr
   echo "  ${cgreen}*${cwhite} Making ... "
   make || exit 1
   echo "  ${cgreen}*${cwhite} Installing ... "
