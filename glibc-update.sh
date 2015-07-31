@@ -19,10 +19,22 @@
 #  
 #!/bin/bash
 
-if test "z$1" == "z"; then PREFIX="/opt"; fi # Decide where we are installing
+# Decide where we are installing
+
+if test "z$1" == "z"; then
+  PREFIX="/opt";
+else
+  PREFIX=$1;
+fi 
 
 CURRENT_DIR=$(pwd) # Save root directory of script
-GCCV="4.9.3" # GCC version to get GCC 5.x isn't really support yet 7/30/2015
+##
+# GCC version to get.
+# has to be at least 4.8.x I think.
+# CentOS 6.6 ships with 4.4.7
+# GCC 5.x isn't really support yet (7/30/2015)
+##
+GCCV="4.9.3"                      
 cgreen=$(tput setaf 2; tput bold) # Just
 cnormal=$(tput sgr0)              # some
 cwhite=$(tput setaf 7)            # fun
@@ -80,7 +92,6 @@ deps=(
 for dep in "${deps[@]}"
   do
      wget --progress=dot "$dep"
-    echo "$dep"
   done
 
 for t in $(find . -maxdepth 1 -type f -name "*.tar.*" ! -name binutils-2.25.tar.bz2 ! -name "*gcc*")
