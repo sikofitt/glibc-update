@@ -155,7 +155,7 @@ function build_glibc() {
   echo "done!${cnormal}"
 }
 function install_finished() {
-
+  echo "  ${cgreen}*${cwhite} Finished!${cnormal}"
 }
 # run functions
 yum_installs || exit 1
