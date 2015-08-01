@@ -28,7 +28,7 @@ cwhite=$(tput setaf 7)            # fun
 if test "z$1" == "z"; then
   echo "  ${cgreen}*${cwhite} You can pass this by launching the script with $0 /your/prefix."
   echo "  ${cgreen}*${cwhite} Where should we install the updated GCC?"
-  echo -n "${cgreen}*${cwhite} ${cgreen}[${cnormal}default is ${cwhite}/opt${cgreen}] ${cwhite}:${cnormal} "
+  echo -n "  ${cgreen}*${cwhite} ${cgreen}[${cnormal}default is ${cwhite}/opt${cgreen}] ${cwhite}:${cnormal} "
 
   read PREFIX;
 else
@@ -49,8 +49,12 @@ GCCV="4.9.3"
 # installs dependencies we can get from Centos
 ##
 function yum_installs() {
-  echo -e "  ${cgreen}*${cwhite} Installing wget ... ${cnormal}"
-  yum -y install wget glibc-devel.i686 glibc-devel.x86_64 GConf2 || exit 1
+  
+  echo -e "  ${cgreen}*${cwhite} Installing packages ... ${cnormal}"
+  yum -y install wget glibc-devel.i686 glibc-devel.x86_64 GConf2 jre xorg-x11-server-Xvfb || exit 1
+  wget -O /etc/yum.repos.d/chromium-el6.repo http://people.centos.org/hughesjr/chromium/6/chromium-el6.repo
+  echo -e "  ${cgreen}*${cwhite} Installing Chromium ... ${cnormal}"
+  yum -y install chromium
   echo -e "  ${cgreen}*${cwhite} Installing Development tools ... ${cnormal}"
   yum -y groupinstall "Development tools"
 }
