@@ -28,7 +28,8 @@ cwhite=$(tput setaf 7)            # fun
 if test "z$1" == "z"; then
   echo "  ${cgreen}*${cwhite} You can pass this by launching the script with $0 /your/prefix."
   echo "  ${cgreen}*${cwhite} Where should we install the updated GCC?"
-  echo -n "${cgreen}[${cnormal}default is ${cwhite}/opt${cgreen}] ${cwhite}:${cnormal} "
+  echo -n "${cgreen}*${cwhite} ${cgreen}[${cnormal}default is ${cwhite}/opt${cgreen}] ${cwhite}:${cnormal} "
+
   read PREFIX;
 else
   PREFIX=$1;
