@@ -19,13 +19,21 @@
 #  
 #!/bin/bash
 
+cgreen=$(tput setaf 2; tput bold) # Just
+cnormal=$(tput sgr0)              # some
+cwhite=$(tput setaf 7)            # fun
+
 # Decide where we are installing
 
 if test "z$1" == "z"; then
-  PREFIX="/opt";
+  echo "  ${cgreen}*${cwhite} You can pass this by launching the script with $0 /your/prefix."
+  echo "  ${cgreen}*${cwhite} Where should we install the updated GCC?"
+  echo -n "${cgreen}[${cnormal}default is ${cwhite}/opt${cgreen}] ${cwhite}:${cnormal} "
+  read PREFIX;
 else
   PREFIX=$1;
 fi 
+
 
 CURRENT_DIR=$(pwd) # Save root directory of script
 ##
@@ -35,16 +43,13 @@ CURRENT_DIR=$(pwd) # Save root directory of script
 # GCC 5.x isn't really support yet (7/30/2015)
 ##
 GCCV="4.9.3"                      
-cgreen=$(tput setaf 2; tput bold) # Just
-cnormal=$(tput sgr0)              # some
-cwhite=$(tput setaf 7)            # fun
 
 ##
 # installs dependencies we can get from Centos
 ##
 function yum_installs() {
   echo -e "  ${cgreen}*${cwhite} Installing wget ... ${cnormal}"
-  yum -y install wget glibc-devel.i686 glibc-devel.x86_64 || exit 1
+  yum -y install wget glibc-devel.i686 glibc-devel.x86_64 GConf2 || exit 1
   echo -e "  ${cgreen}*${cwhite} Installing Development tools ... ${cnormal}"
   yum -y groupinstall "Development tools"
 }
@@ -147,7 +152,7 @@ function build_glibc() {
   echo "done!${cnormal}"
   mkdir $CURRENT_DIR/glibc-2.21/build
   cd $CURRENT_DIR/glibc-2.21/build
-  ../configure --prefix=/usr
+  CC=$PREFIX/bin/gcc CPP=$PREFIX/bin/cpp CXX=$PREFIX/bin/g++ ../configure --prefix=/usr
   echo "  ${cgreen}*${cwhite} Making ... "
   make || exit 1
   echo "  ${cgreen}*${cwhite} Installing ... "
@@ -156,7 +161,16 @@ function build_glibc() {
 }
 function install_finished() {
   echo "  ${cgreen}*${cwhite} Finished!${cnormal}"
+  echo "  ${cgreen}*${cwhite} binutils-2.25 installed into /usr"
+  echo "  ${cgreen}*${cwhite} gcc-$GCCV installed into $PREFIX"
+  echo "  ${cgreen}*${cwhite} glibc-2.21 installed into /usr"
+  echo "  ${cgreen}*${cwhite} You still need to link the new libstdc++."
+  echo "  ${cgreen}*${cwhite} 'rm /usr/lib64/libstdc++.so.6 && ln -s /opt/lib64/libstdc++.so.6.0.20 /usr/lib64'"
+  echo "  ${cgreen}*${cwhite} You can ignore the above if you installed with the prefix /usr"
 }
+
+CHROMEDRIVER="http://chromedriver.storage.googleapis.com/2.16/chromedriver_linux64.zip"
+
 # run functions
 yum_installs || exit 1
 install_binutils || exit 1
